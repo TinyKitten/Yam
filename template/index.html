@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Yam</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
+</head>
+
+<body>
+  <h1>
+    Yam
+  </h1>
+  <div class="howToUseBox" id="clickable">
+    <span id="url" class="url">https://yam.tinykitten.me/post?text=YOUR_OWN_TEXT</span>
+    <span class="helperText">
+      CLICK TO COPY
+    </span>
+  </div>
+
+  <p id="notice" class="notice">
+    &nbsp;
+  </p>
+
+  <footer>
+    <p class="copyright">
+      Copyright &copy; 2018 TinyKitten
+    </p>
+  </footer>
+
+  <script type="text/javascript">
+    var button = document.getElementById('clickable');
+    var notice = document.getElementById('notice');
+    var copyTarget = document.getElementById('url');
+
+    if (!document.queryCommandSupported('copy')) {
+      notice.textContent = 'あなたのブラウザはコピーに対応していません。';
+    }
+
+    button.onclick = function () {
+      document.execCommand('copy');
+      notice.textContent = 'URLをコピーしました。';
+
+      setTimeout(function () {
+        notice.innerHTML = '&nbsp;';
+      }, 3000);
+    }
+
+    copyTarget.addEventListener('copy', function (event) {
+      event.preventDefault();
+      if (event.clipboardData) {
+        event.clipboardData.setData("text/plain", copyTarget.textContent);
+      }
+    });
+
+  </script>
+</body>
+
+</html>
