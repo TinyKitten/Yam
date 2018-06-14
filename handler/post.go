@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // ErrorPageData エラーページに渡すデータ
@@ -67,6 +68,13 @@ func PostHander(w http.ResponseWriter, r *http.Request) {
 				log.Fatal(err)
 			}
 			return
+		}
+
+		if strings.HasPrefix(instance, "http://") {
+			instance = strings.Replace(instance, "http://", "", 1)
+		}
+		if strings.HasPrefix(instance, "https://") {
+			instance = strings.Replace(instance, "https://", "", 1)
 		}
 
 		baseURL := "https://" + instance

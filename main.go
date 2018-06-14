@@ -15,5 +15,5 @@ func main() {
 
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":1919", r)
 }
