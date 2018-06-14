@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Yam</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="toot.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="common.css" />
+</head>
+
+<body>
+  <form id="tootForm" class="tootForm" method="POST" action="/post">
+    <input name="instance" id="instanceName" class="instanceName" type="text" placeholder="mstdn.jp" />
+  
+    <textarea name="body" id="tootBody" class="preview">{{.Text}}</textarea>
+
+    <input type="submit" class="submit" value="トゥート">
+  </form>
+
+  <p class="errorText" id="error">&nbsp;</p>
+
+  <p class="poweredBy">
+    Powered by <a href="/" target="_blank" class="poweredByLink">Yam</span>
+  </p>
+  
+  <footer>
+    <p class="copyright">
+      Copyright &copy; 2018 TinyKitten
+    </p>
+  </footer>
+
+  <script type="text/javascript">
+    var tootForm = document.getElementById("tootForm");
+    var instanceName = document.getElementById("instanceName");
+    var tootBody = document.getElementById("tootBody");
+
+    tootForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      if (instanceName.value === '' || tootBody.value === '') {
+        var errorText = document.getElementById("error");
+        errorText.innerText = 'すべて入力してください。';
+      } else {
+        tootForm.submit();
+      }
+    });
+  </script>
+</body>
+
+</html>

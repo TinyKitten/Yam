@@ -1,0 +1,39 @@
+.tootForm {
+  display: flex;
+  flex-direction: column;
+  margin-top: 32px;
+  width: 380px;
+  max-width: 85%;
+}
+.instanceName {
+  border: none;
+  margin-bottom: 12px;
+}
+.preview {
+  resize: none;
+  border: none;
+  height: 96px;
+}
+.instanceName, .preview {
+  font-size: 1.1rem;
+  border-radius: 2px;
+  padding: 8px;
+}
+
+.submit {
+  background: #2b90d9;
+  color: #fff;
+  border: none;
+  margin-top: 32px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 8px 0;
+  cursor: pointer;
+  appearance: none;
+}
+
+.errorText {
+  font-weight: bold;
+  color: red;
+  margin-top: 24px;
+}
