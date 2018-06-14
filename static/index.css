@@ -23,10 +23,13 @@ h1 {
   position: relative;
   cursor: pointer;
   transition: 0.25s;
+  max-width: 85%;
+  overflow: hidden;
 }
 .url {
   font-weight: bold;
   line-height: 1.25;
+  word-break: break-all;
 }
 .helperText {
   display: block;
