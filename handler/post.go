@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/gobuffalo/packr"
 )
 
 // ErrorPageData エラーページに渡すデータ
@@ -25,32 +27,29 @@ func PostHander(w http.ResponseWriter, r *http.Request) {
 		textQuery := r.URL.Query().Get("text")
 
 		if textQuery == "" {
-			dat := ErrorPageData{
-				Error: "入力が不足しています。",
-			}
-			t := template.Must(template.ParseFiles("template/error.html"))
-			if err := t.ExecuteTemplate(w, "error.html", dat); err != nil {
-				log.Fatal(err)
-			}
+			handleError(w, "入力が不足しています。")
 			return
 		}
 
 		unescapedText, err := url.QueryUnescape(textQuery)
 		if err != nil {
-			dat := ErrorPageData{
-				Error: "アンエスケープできませんでした。",
-			}
-			t := template.Must(template.ParseFiles("template/error.html"))
-			if err := t.ExecuteTemplate(w, "error.html", dat); err != nil {
-				log.Fatal(err)
-			}
+			handleError(w, "アンエスケープできませんでした。")
 			return
 		}
 		dat := TootPageData{
 			Text: unescapedText,
 		}
-		t := template.Must(template.ParseFiles("template/toot.html"))
-		if err := t.ExecuteTemplate(w, "toot.html", dat); err != nil {
+		box := packr.NewBox("../template")
+		s, err := box.MustString("toot.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		t := template.New("error")
+		t, err = t.Parse(s)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err := t.Execute(w, dat); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -60,13 +59,7 @@ func PostHander(w http.ResponseWriter, r *http.Request) {
 		body := r.Form.Get("body")
 
 		if instance == "" || body == "" {
-			dat := ErrorPageData{
-				Error: "入力が不足しています。",
-			}
-			t := template.Must(template.ParseFiles("template/error.html"))
-			if err := t.ExecuteTemplate(w, "error.html", dat); err != nil {
-				log.Fatal(err)
-			}
+			handleError(w, "入力が不足しています。")
 			return
 		}
 
@@ -80,17 +73,31 @@ func PostHander(w http.ResponseWriter, r *http.Request) {
 		baseURL := "https://" + instance
 		resp, err := http.Get(baseURL + "/api/v1/instance")
 		if err != nil || resp.StatusCode == 404 {
-			dat := ErrorPageData{
-				Error: "インスタンスがダウンしているか、Mastodonインスタンスではないようです。",
-			}
-			t := template.Must(template.ParseFiles("template/error.html"))
-			if err := t.ExecuteTemplate(w, "error.html", dat); err != nil {
-				log.Fatal(err)
-			}
+			handleError(w, "インスタンスがダウンしているか、Mastodonインスタンスではないようです。")
 			return
 		}
 		defer resp.Body.Close()
 
 		http.Redirect(w, r, "https://"+instance+"/share?text="+url.QueryEscape(body), http.StatusFound)
+	}
+}
+
+func handleError(w http.ResponseWriter, msg string) {
+	dat := ErrorPageData{
+		Error: msg,
+	}
+
+	box := packr.NewBox("../template")
+	s, err := box.MustString("error.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	t := template.New("error")
+	t, err = t.Parse(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := t.Execute(w, dat); err != nil {
+		log.Fatal(err)
 	}
 }

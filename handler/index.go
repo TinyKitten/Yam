@@ -4,13 +4,24 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+
+	"github.com/gobuffalo/packr"
 )
 
 // IndexHandler ルートパスのハンドラ
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: もっとマシにする
-	t := template.Must(template.ParseFiles("template/index.html"))
-	if err := t.ExecuteTemplate(w, "index.html", nil); err != nil {
+	box := packr.NewBox("../template")
+	s, err := box.MustString("index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	t := template.New("index")
+	t, err = t.Parse(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := t.Execute(w, nil); err != nil {
 		log.Fatal(err)
 	}
 }
