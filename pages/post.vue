@@ -39,7 +39,9 @@ export default {
       if (!this.validateForm()) {
         return;
       }
-      this.onCompleteInputValidation();
+      if (this.$route.query.redirect) {
+        this.onCompleteInputValidation();
+      }
     }
   },
   methods: {
