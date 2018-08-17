@@ -11,6 +11,7 @@
     </p>
     <footer>
       <p class="copyright">
+        <a href="https://github.com/TinyKitten/YamChromeExt" target="_blank" class="poweredByLink halfOpacity">Chrome Extension</a><br>
         Copyright &copy; 2018 TinyKitten
       </p>
     </footer>

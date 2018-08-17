@@ -167,16 +167,22 @@ footer {
 .copyright {
   text-align: center;
   color: #ccc;
+  line-height: 1.5;
 }
 
 .poweredBy {
   color: #fff;
   margin-top: 32px;
+  text-align: center;
 }
 
 .poweredByLink {
   color: #fff;
   text-decoration: none;
   font-weight: bold;
+}
+
+.halfOpacity {
+  opacity: 0.5;
 }
 </style>
