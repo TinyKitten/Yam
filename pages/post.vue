@@ -41,7 +41,7 @@ export default {
       }
       if (
         this.$route.query.redirect === 'true' ||
-        this.$route.query.redirect === 1
+        this.$route.query.redirect === '1'
       ) {
         this.onCompleteInputValidation();
       }
