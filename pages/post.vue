@@ -24,6 +24,7 @@
 
 <script>
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export default {
   data() {
@@ -35,6 +36,7 @@ export default {
   },
   mounted() {
     this.tootBody = this.$route.query.text;
+    this.instanceName = this.getLastInstance();
   },
   methods: {
     onSubmit(e) {
@@ -50,16 +52,16 @@ export default {
       if (this.instanceName.startsWith('https://')) {
         this.instanceName = this.instanceName.replace('https://', '');
       }
+
       const baseUrl = `https://${this.instanceName}`;
       this.pingMastodonInstance(baseUrl).catch(() => {
         this.error = 'エラーが発生しました。';
         return;
       });
-      if (!process.server) {
-        window.location.href = `https://${
-          this.instanceName
-        }/share?text=${encodeURIComponent(this.tootBody)}`;
-      }
+
+      this.storeToCookie();
+
+      this.redirect();
     },
     pingMastodonInstance(url) {
       return new Promise((resolve, reject) => {
@@ -68,6 +70,19 @@ export default {
           .then(() => resolve())
           .catch(() => reject());
       });
+    },
+    storeToCookie() {
+      Cookies.set('lastInstance', this.instanceName);
+    },
+    getLastInstance() {
+      return Cookies.get('lastInstance');
+    },
+    redirect() {
+      if (!process.server) {
+        window.location.href = `https://${
+          this.instanceName
+        }/share?text=${encodeURIComponent(this.tootBody)}`;
+      }
     },
   },
 };
