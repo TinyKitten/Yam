@@ -57,9 +57,10 @@ export default {
       this.onCompleteInputValidation();
     },
     onCompleteInputValidation() {
-      this.prepareRedirect();
-      this.redirect();
-      this.storeToCookie();
+      this.prepareRedirect().then(() => {
+        this.redirect();
+        this.storeToCookie();
+      });
     },
     prepareRedirect() {
       if (this.instanceName.startsWith('http://')) {
@@ -69,10 +70,14 @@ export default {
         this.instanceName = this.instanceName.replace('https://', '');
       }
 
-      const baseUrl = `https://${this.instanceName}`;
-      this.pingMastodonInstance(baseUrl).catch(() => {
-        this.error = 'エラーが発生しました。';
-        return;
+      return new Promise((resolve, reject) => {
+        const baseUrl = `https://${this.instanceName}`;
+        this.pingMastodonInstance(baseUrl)
+          .then(() => resolve())
+          .catch(() => {
+            this.error = 'エラーが発生しました。';
+            reject();
+          });
       });
     },
     pingMastodonInstance(url) {
