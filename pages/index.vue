@@ -33,7 +33,7 @@
 export default {
   data() {
     return {
-      url: 'https://yam.tinykitten.me/post?instance=mstdn.jp&text=YOUR_OWN_TEXT',
+      url: 'https://yam.tinykitten.me/post?text=YOUR_OWN_TEXT',
       notice: '',
     };
   },
