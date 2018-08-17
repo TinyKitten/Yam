@@ -1,0 +1,118 @@
+<template>
+  <section>
+    <form class="tootForm" @submit="onSubmit">
+      <input v-model="instanceName" name="instance" class="instanceName" type="text" placeholder="mstdn.tinykitten.me" >
+
+      <textarea v-model="tootBody" name="body" class="preview"/>
+
+      <input type="submit" class="submit" value="トゥート">
+    </form>
+
+    <p class="errorText">{{ error ? error : '&nbsp;' }}</p>
+
+    <p class="poweredBy">
+      Powered by <a href="/" target="_blank" class="poweredByLink">Yam</a>
+    </p>
+
+    <footer>
+      <p class="copyright">
+        Copyright &copy; 2018 TinyKitten
+      </p>
+    </footer>
+  </section>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      error: '',
+      instanceName: '',
+      tootBody: '',
+    };
+  },
+  mounted() {
+    this.tootBody = this.$route.query.text;
+  },
+  methods: {
+    onSubmit(e) {
+      e.preventDefault();
+      if (this.tootBody === '' || this.instanceName === '') {
+        this.error = 'すべて入力してください。';
+        return;
+      }
+
+      if (this.instanceName.startsWith('http://')) {
+        this.instanceName = this.instanceName.replace('http://', '');
+      }
+      if (this.instanceName.startsWith('https://')) {
+        this.instanceName = this.instanceName.replace('https://', '');
+      }
+      const baseUrl = `https://${this.instanceName}`;
+      this.pingMastodonInstance(baseUrl).catch(() => {
+        this.error = 'エラーが発生しました。';
+        return;
+      });
+      if (!process.server) {
+        window.location.href = `https://${
+          this.instanceName
+        }/share?text=${encodeURIComponent(this.tootBody)}`;
+      }
+    },
+    pingMastodonInstance(url) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${url}/api/v1/instance`)
+          .then(() => resolve())
+          .catch(() => reject());
+      });
+    },
+  },
+};
+</script>
+
+<style scoped>
+.tootForm {
+  display: flex;
+  flex-direction: column;
+  margin-top: 32px;
+  width: 380px;
+  max-width: 85%;
+}
+.instanceName {
+  border: none;
+  margin-bottom: 12px;
+}
+.preview {
+  resize: none;
+  border: none;
+  height: 96px;
+}
+.instanceName,
+.preview {
+  font-size: 1.1rem;
+  border-radius: 2px;
+  padding: 8px;
+}
+
+.submit {
+  background: #2b90d9;
+  color: #fff;
+  border: none;
+  margin-top: 32px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 8px 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.errorText {
+  font-weight: bold;
+  color: red;
+  margin-top: 24px;
+}
+</style>

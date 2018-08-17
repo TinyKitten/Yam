@@ -1,65 +1,91 @@
 <template>
   <section class="container">
-    <div>
-      <app-logo/>
-      <h1 class="title">
-        yam
-      </h1>
-      <h2 class="subtitle">
-        Share to Mastodon, simply.
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
-      </div>
+    <h1>
+      Yam
+    </h1>
+    <h2>Share to Mastodon, simply.</h2>
+    <div
+      v-clipboard:copy="url"
+      v-clipboard:success="onCopy"
+      v-clipboard:error="onError"
+      class="howToUseBox"
+    >
+      <span ref="url" class="url">{{ url }}</span>
+      <span class="helperText">
+        CLICK TO COPY
+      </span>
     </div>
+
+    <p class="notice">
+      {{ notice ? notice : '&nbsp;' }}
+    </p>
+
+    <footer>
+      <p class="copyright">
+        Copyright &copy; 2018 TinyKitten
+      </p>
+    </footer>
   </section>
 </template>
 
 <script>
-import AppLogo from '~/components/AppLogo.vue';
-
 export default {
-  components: {
-    AppLogo,
+  data() {
+    return {
+      url: 'https://yam.tinykitten.me/post?text=YOUR_OWN_TEXT',
+      notice: '',
+    };
+  },
+  methods: {
+    onCopy() {
+      setTimeout(() => {
+        this.notice = '';
+      }, 3000);
+      this.notice = 'URLをコピーしました。';
+    },
+    onError() {
+      this.notice = 'あなたのブラウザはコピーに対応していません。';
+    },
   },
 };
 </script>
 
-<style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+<style scoped>
+.howToUseBox {
   text-align: center;
+  margin-top: 32px;
+  background: #2b90d9;
+  padding: 32px 24px;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  position: relative;
+  cursor: pointer;
+  transition: 0.25s;
+  max-width: 85%;
+  overflow: hidden;
 }
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* 1 */
+.url {
+  font-weight: bold;
+  line-height: 1.25;
+  word-break: break-all;
+}
+.helperText {
   display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 4px;
+  background: #282c37;
+  border-radius: 4px 0 0 0;
+}
+.howToUseBox:hover {
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.75);
 }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.notice {
+  margin-top: 24px;
+  font-weight: bold;
 }
 </style>
