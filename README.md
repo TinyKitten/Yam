@@ -1,23 +1,11 @@
-# yam
+# Yam
 
 > Share to Mastodon, simply.
 
-## Build Setup
+## 公式拡張機能
 
-``` bash
-# install dependencies
-$ npm install # Or yarn install
+[Chrome](https://github.com/TinyKitten/YamChromeExt)
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+## 実際に動いてるやつ
 
-# build for production and launch server
-$ npm run build
-$ npm start
-
-# generate static project
-$ npm run generate
-```
-
-For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
-
+[https://yam.tinykitten.me](https://yam.tinykitten.me)
