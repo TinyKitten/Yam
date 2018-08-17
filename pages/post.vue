@@ -2,18 +2,13 @@
   <section>
     <form class="tootForm" @submit="onSubmit">
       <input v-model="instanceName" name="instance" class="instanceName" type="text" placeholder="mstdn.jp" >
-
       <textarea v-model="tootBody" name="body" class="preview"/>
-
       <input type="submit" class="submit" value="トゥート">
     </form>
-
     <p class="errorText">{{ error ? error : '&nbsp;' }}</p>
-
     <p class="poweredBy">
       Powered by <a href="/" target="_blank" class="poweredByLink">Yam</a>
     </p>
-
     <footer>
       <p class="copyright">
         Copyright &copy; 2018 TinyKitten
@@ -35,17 +30,38 @@ export default {
     };
   },
   mounted() {
-    this.tootBody = this.$route.query.text;
+    this.tootBody = this.$route.query.text ? this.$route.query.text : '';
     this.instanceName = this.getLastInstance();
-  },
-  methods: {
-    onSubmit(e) {
-      e.preventDefault();
-      if (this.tootBody === '' || this.instanceName === '') {
-        this.error = 'すべて入力してください。';
+    const queryInstanceName = this.$route.query.instance;
+    if (queryInstanceName) {
+      this.instanceName = queryInstanceName;
+      if (!this.validateForm()) {
         return;
       }
-
+      this.onCompleteInputValidation();
+    }
+  },
+  methods: {
+    validateForm() {
+      if (this.tootBody === '' || this.instanceName === '') {
+        this.error = 'すべて入力してください。';
+        return false;
+      }
+      return true;
+    },
+    onSubmit(e) {
+      e.preventDefault();
+      if (!this.validateForm()) {
+        return;
+      }
+      this.onCompleteInputValidation();
+    },
+    onCompleteInputValidation() {
+      this.prepareRedirect();
+      this.redirect();
+      this.storeToCookie();
+    },
+    prepareRedirect() {
       if (this.instanceName.startsWith('http://')) {
         this.instanceName = this.instanceName.replace('http://', '');
       }
@@ -58,10 +74,6 @@ export default {
         this.error = 'エラーが発生しました。';
         return;
       });
-
-      this.storeToCookie();
-
-      this.redirect();
     },
     pingMastodonInstance(url) {
       return new Promise((resolve, reject) => {
