@@ -1,7 +1,7 @@
 <template>
   <section>
     <form class="tootForm" @submit="onSubmit">
-      <input v-model="instanceName" name="instance" class="instanceName" type="text" placeholder="mstdn.tinykitten.me" >
+      <input v-model="instanceName" name="instance" class="instanceName" type="text" placeholder="mstdn.jp" >
 
       <textarea v-model="tootBody" name="body" class="preview"/>
 
