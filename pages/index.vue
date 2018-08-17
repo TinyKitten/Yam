@@ -10,7 +10,7 @@
       v-clipboard:error="onError"
       class="howToUseBox"
     >
-      <span ref="url" class="url">{{ url }}</span>
+      <span class="url">{{ url }}</span>
       <span class="helperText">
         CLICK TO COPY
       </span>
@@ -33,7 +33,7 @@
 export default {
   data() {
     return {
-      url: 'https://yam.tinykitten.me/post?text=YOUR_OWN_TEXT',
+      url: 'https://yam.tinykitten.me/post?instance=mstdn.jp&text=YOUR_OWN_TEXT',
       notice: '',
     };
   },
